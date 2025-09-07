@@ -1,0 +1,8 @@
+
+.gradient-blue-purple {
+  background: linear-gradient(90deg, white, blue);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.
