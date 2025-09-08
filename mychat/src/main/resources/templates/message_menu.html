@@ -10,7 +10,7 @@
 </head>
 <body>
     <h1 class="text-center" style="font-family:san-sarif" th:text="'Welcome @'+ ${username}"></h1>
-    <form method="post" action="/home/verify">
+    <form method="post" action="/user/verify">
         <input type="text" name="receiver" placeholder="Enter receiver">
         <button type="submit">Verify User</button>
     </form>
