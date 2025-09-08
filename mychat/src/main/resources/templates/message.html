@@ -9,15 +9,27 @@
     <title>Message Box</title>
 </head>
 <body>
-    <div th:text="'@'+${receiver}"></div>
-    <div class="receivedMessages" th:each="messageDetail : ${messages}">
-        <div th:text="${messageDetail.message}"></div>
-    </div>
+    <script th:inline="javascript">
+        window.receiver = /*[[${receiver}]]*/ '';
+        window.receiver_id = /*[[${receiver_id}]]*/ '';
+    </script>
+    <div>@<span id="user_name"></span></div>
+    <script>
+        document.getElementById("user_name").innerText = window.receiver;
 
-    <form method="post" action="/message/send">
-        <input type="text" name="receiverId" th:value="${receiver_id}" hidden="true">
+    </script>
+
+    <form method="post" action="/message/send" onsubmit="getReceiverId()">
+        <input type="hidden" name="receiverId" id="receiver_id">
         <textarea placeholder="Enter message" name="message"></textarea>
         <button type="submit">Send</button>
     </form>
+    <script>
+        function getReceiverId(){
+            console.log("getReceiverId() function call");
+            document.getElementById("receiver_id").value = window.receiver_id;
+
+        }
+    </script>
 </body>
 </html>

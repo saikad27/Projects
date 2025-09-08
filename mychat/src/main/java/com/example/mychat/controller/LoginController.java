@@ -44,6 +44,6 @@ public class LoginController {
         }
 
         model.addAttribute("username",username);
-        return "home.html";
+        return "message_menu.html";
     }
 }

@@ -21,7 +21,7 @@ public class MessageController {
         this.userSession = userSession;
     }
 
-    @PostMapping("/home/verify")
+    @PostMapping("/user/verify")
     public String verify(@RequestParam String receiver, Model model){
 
         Long receiverId = null;
@@ -34,18 +34,20 @@ public class MessageController {
             verificationResult = false;
         }
         if(verificationResult){
-            model.addAttribute("message","verified");
+
             model.addAttribute("receiver",receiver);
             model.addAttribute("receiver_id",receiverId);
+            return "message.html";
         }else{
             model.addAttribute("message","not verified");
+            return "message_menu.html";
         }
-        return "message.html";
     }
 
     @PostMapping("/message/send")
     public String sendMessage(@RequestParam String message, @RequestParam Long receiverId,Model model){
         MessageDetail messageDetail = messageProcessor.process(message,userSession.getUserId(),receiverId);
+        model.addAttribute("sent_message",messageDetail);
         return "message.html";
     }
 
