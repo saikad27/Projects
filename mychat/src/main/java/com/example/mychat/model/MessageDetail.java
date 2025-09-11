@@ -25,8 +25,7 @@ public class MessageDetail {
     @ManyToOne
     @JoinColumn(name="receiver_id" , referencedColumnName="user_id")
     private UserDetail receiver;
-    private Boolean message_sent_status;
-    private Boolean message_received_status;
+    private Boolean message_delivery_status;
 
     public Long getMessageId() {
         return messageId;
@@ -92,19 +91,11 @@ public class MessageDetail {
         this.receiver = receiver;
     }
 
-    public Boolean getMessage_sent_status() {
-        return message_sent_status;
+    public Boolean getMessage_delivery_status() {
+        return message_delivery_status;
     }
 
-    public void setMessage_sent_status(Boolean message_sent_status) {
-        this.message_sent_status = message_sent_status;
-    }
-
-    public Boolean getMessage_received_status() {
-        return message_received_status;
-    }
-
-    public void setMessage_received_status(Boolean message_received_status) {
-        this.message_received_status = message_received_status;
+    public void setMessage_delivery_status(Boolean message_received_status) {
+        this.message_delivery_status = message_received_status;
     }
 }
