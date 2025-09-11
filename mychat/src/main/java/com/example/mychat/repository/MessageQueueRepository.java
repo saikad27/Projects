@@ -1,18 +1,24 @@
 package com.example.mychat.repository;
 
-import com.example.mychat.model.MessageDetail;
 import com.example.mychat.model.QueuedMessage;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
 public interface MessageQueueRepository extends JpaRepository<QueuedMessage,Long> {
 
-    @Query("SELECT * FROM message_queue WHERE receiver_id=:receiver_id")
-    public List<QueuedMessage> findByReceiverId(Long receiver_id);
+    @Query("SELECT qm FROM QueuedMessage qm WHERE qm.receiver.user_id=:receiver_id")
+    public List<QueuedMessage> findByReceiverId(@Param("receiver_id") Long receiver_id);
 
-    @Query("DELETE FROM message_queue WHERE receiver_id:receiver_id")
-    public void deleteByReceiverId(Long receiverId);
+    @Transactional
+    @Query("DELETE FROM QueuedMessage qm WHERE qm.receiver.user_id=:receiver_id")
+    @Modifying
+    public void deleteByReceiverId(@Param("receiver_id") Long receiver_id);
+
+
 
 }

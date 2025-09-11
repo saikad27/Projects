@@ -5,7 +5,8 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.sql.Time;
 
-@Entity(name="message_queue")
+@Entity
+@Table(name="message_queue")
 public class QueuedMessage {
     public QueuedMessage(MessageDetail messageDetail){
         messageId = messageDetail.getMessageId();
