@@ -9,26 +9,71 @@
     <title>Message Box</title>
 </head>
 <body>
-    <script th:inline="javascript">
-        window.receiver = /*[[${receiver}]]*/ '';
-        window.receiver_id = /*[[${receiver_id}]]*/ '';
-    </script>
-    <div>@<span id="user_name"></span></div>
-    <script>
-        document.getElementById("user_name").innerText = window.receiver;
+<script th:inline="javascript">
+    sessionStorage.setItem("receiver",/*[[${receiver}]]*/ '');
+    sessionStorage.setItem("receiverId",/*[[${receiver_id}]]*/ '');
+</script>
+<div>@<span id="user_name"></span></div>
+<script>
+    document.getElementById("user_name").innerText = sessionStorage.getItem("receiver");
 
-    </script>
+</script>
 
-    <form method="post" action="/message/send" onsubmit="getReceiverId()">
-        <input type="hidden" name="receiverId" id="receiver_id">
-        <textarea placeholder="Enter message" name="message"></textarea>
-        <button type="submit">Send</button>
-    </form>
-    <script>
-        function getReceiverId(){
-            console.log("getReceiverId() function call");
-            document.getElementById("receiver_id").value = window.receiver_id;
-        }
-    </script>
+<div id="sent_message"></div>
+<div contenteditable="true" class="chat-input" id="message"></div>
+<button type="submit" id="sendBtn">Send</button>
+<script>
+    document.getElementById("sendBtn").addEventListener("click", () => {
+      const inputEl = document.getElementById("message");
+      const sentEl = document.getElementById("sent_message");
+
+      // 1. Extract the message text
+      const message = inputEl.innerText.trim();
+
+      if (!message) return; // don't send empty messages
+
+      // 2. Create DTO
+      const messageDTO = {
+        receiverId: sessionStorage.getItem("receiverId"),   // replace with actual receiverId
+        message: message
+      };
+
+    // 3. Send POST request
+  fetch("/message/send", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(messageDTO)
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Server response:", data);
+
+    // 4. Display the sent message
+    const msgDiv = document.createElement("div");
+    msgDiv.textContent = message;
+    sentEl.appendChild(msgDiv);
+
+    // 5. Clear the input box
+    inputEl.innerText = "";
+  })
+  .catch(err => console.error("Error sending message:", err));
+});
+
+</script>
+
+
+
+</script>
+<!--<form method="post" action="/message/send" onsubmit="getReceiverId()" >
+    <input type="hidden" name="receiverId" id="receiver_id">
+    <textarea placeholder="Enter message" name="message"></textarea>
+    <button type="submit" onclick="getMessageResponse()">Send</button>
+</form>-->
+<script>
+    function getReceiverId(){
+        console.log("getReceiverId() function call");
+        document.getElementById("receiver_id").value = sessionStorage.getItem("receiverId");
+    }
+</script>
 </body>
 </html>

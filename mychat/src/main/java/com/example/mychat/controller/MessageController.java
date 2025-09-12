@@ -1,5 +1,6 @@
 package com.example.mychat.controller;
 
+import com.example.mychat.dto.MessageDTO;
 import com.example.mychat.exception.UserNotFoundException;
 import com.example.mychat.model.MessageDetail;
 import com.example.mychat.model.QueuedMessage;
@@ -9,6 +10,7 @@ import com.example.mychat.service.UserVerificationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -51,11 +53,11 @@ public class MessageController {
         }
     }
 
+    @ResponseBody
     @PostMapping("/message/send")
-    public String sendMessage(@RequestParam String message, @RequestParam Long receiverId,Model model){
-        MessageDetail messageDetail = messageProcessor.process(message,userSession.getUserId(),receiverId);
-        model.addAttribute("sent_message",messageDetail);
-        return "message.html";
+    public MessageDetail sendMessage(@RequestBody MessageDTO messageDTO, Model model){
+        return messageProcessor.process(messageDTO.getMessage(),userSession.getUserId(),messageDTO.getReceiverId());
+        //model.addAttribute("sent_message",messageDetail);
     }
 
     @ResponseBody
@@ -72,6 +74,5 @@ public class MessageController {
     public List<QueuedMessage> fetchAllMessages(Long receiverId){
         return messageProcessor.fetchAllMessages(userSession.getUserId());
     }
-
 
 }
