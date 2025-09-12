@@ -3,7 +3,6 @@ package com.example.mychat.processor;
 import com.example.mychat.model.MessageDetail;
 import com.example.mychat.model.QueuedMessage;
 import com.example.mychat.model.UserDetail;
-import com.example.mychat.model.UserSession;
 import com.example.mychat.repository.MessageQueueRepository;
 import com.example.mychat.repository.MessageRepository;
 import org.springframework.stereotype.Component;
@@ -40,6 +39,8 @@ public class MessageProcessor {
         messageDetail.setMessage_delivery_status(false);
         messageRepository.save(messageDetail);
         QueuedMessage queuedMessage = new QueuedMessage(messageDetail);
+        System.out.println(queuedMessage);
+        messageQueue.save(queuedMessage);
         if(requestRegistry.containsKey(messageDetail.getReceiver().getUser_id())){
             requestRegistry.get(messageDetail.getReceiver().getUser_id()).setResult(messageDetail);
             messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUser_id());
