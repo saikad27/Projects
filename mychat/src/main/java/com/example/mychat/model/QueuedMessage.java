@@ -27,14 +27,14 @@ public class QueuedMessage {
     private Time message_sent_time;
 
     @ManyToOne
-    @JoinColumn(name="sender_id" , referencedColumnName="user_id")
+    @JoinColumn(name="sender_id" , referencedColumnName="userId")
     private UserDetail sender;
     private String message;
     private Date message_received_date;
     private Time message_received_time;
 
     @ManyToOne
-    @JoinColumn(name="receiver_id" , referencedColumnName="user_id")
+    @JoinColumn(name="receiver_id" , referencedColumnName="userId")
     private UserDetail receiver;
     private Boolean message_delivery_status;
 

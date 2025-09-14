@@ -15,7 +15,7 @@ public class LoginProcessor {
     }
     public boolean processLogin(LoginCredential loginCred, UserSession userSession) {
         UserDetail userDetail = userRepository.findByUsername(loginCred.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
-        userSession.setUserId(userDetail.getUser_id());
+        userSession.setUserId(userDetail.getUserId());
         userSession.setUsername(userDetail.getUsername());
         userSession.setEmail(userDetail.getEmail());
         return loginCred.getUsername().equals(userDetail.getUsername()) && loginCred.getPassword().equals(userDetail.getPassword());

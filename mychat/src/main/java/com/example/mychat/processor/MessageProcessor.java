@@ -5,6 +5,7 @@ import com.example.mychat.model.QueuedMessage;
 import com.example.mychat.model.UserDetail;
 import com.example.mychat.repository.MessageQueueRepository;
 import com.example.mychat.repository.MessageRepository;
+import com.example.mychat.repository.UserRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 public class MessageProcessor {
     private final MessageQueueRepository messageQueue;
     private final MessageRepository messageRepository;
+
     private final Map<Long, DeferredResult<MessageDetail>> requestRegistry;
 
 
@@ -31,7 +33,9 @@ public class MessageProcessor {
 
     public MessageDetail process(String message, Long senderId, Long receiverId){
         MessageDetail messageDetail = new MessageDetail();
+        System.out.println(senderId);
         messageDetail.setSender(new UserDetail(senderId));
+        System.out.println(senderId);
         messageDetail.setReceiver(new UserDetail(receiverId));
         messageDetail.setMessage(message);
         messageDetail.setMessage_sent_date(Date.valueOf(LocalDate.now()));
@@ -41,9 +45,9 @@ public class MessageProcessor {
         QueuedMessage queuedMessage = new QueuedMessage(messageDetail);
         System.out.println(queuedMessage);
         messageQueue.save(queuedMessage);
-        if(requestRegistry.containsKey(messageDetail.getReceiver().getUser_id())){
-            requestRegistry.get(messageDetail.getReceiver().getUser_id()).setResult(messageDetail);
-            messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUser_id());
+        if(requestRegistry.containsKey(messageDetail.getReceiver().getUserId())){
+            requestRegistry.get(messageDetail.getReceiver().getUserId()).setResult(messageDetail);
+            messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUserId());
         }
         return messageDetail;
     }

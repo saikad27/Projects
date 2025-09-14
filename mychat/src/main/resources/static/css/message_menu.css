@@ -1,0 +1,25 @@
+.search_box{
+    text-align:center;
+}
+div{
+    background:black;
+    color:white;
+}
+html,body{
+    background:black;
+    color:white;
+}
+#user_tag{
+    text-align:right;
+    padding-right:10px;
+    background:black;
+    color:white;
+    font-size:30px;
+    font-family: sans-serif ;
+}
+.chat_box{
+    border:2px solid white;
+    height:40px;
+    font-size:25px;
+
+}
