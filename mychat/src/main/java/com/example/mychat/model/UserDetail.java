@@ -8,13 +8,13 @@ public class UserDetail {
     public UserDetail() {
     }
 
-    public UserDetail(Long user_id) {
-        this.user_id = user_id;
+    public UserDetail(Long userId) {
+        this.userId = userId;
     }
 
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE)
-    private Long user_id;
+    private Long userId;
     @Column(name="username")
     private String username;
     @Column(name="email")
@@ -46,11 +46,11 @@ public class UserDetail {
         this.password = password;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

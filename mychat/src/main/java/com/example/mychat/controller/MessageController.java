@@ -31,12 +31,12 @@ public class MessageController {
     }
 
     @PostMapping("/user/verify")
-    public String verify(@RequestParam String receiver, Model model){
+    public String verify(@RequestParam String user, Model model){
 
-        Long receiverId = null;
+        Long userId = null;
         boolean verificationResult;
         try {
-            receiverId = userVerifier.verifyUser(receiver);
+            userId = userVerifier.verifyUser(user);
             verificationResult = true;
         }catch(UserNotFoundException e){
             e.printStackTrace();
@@ -44,9 +44,10 @@ public class MessageController {
         }
         if(verificationResult){
 
-            model.addAttribute("receiver",receiver);
-            model.addAttribute("receiver_id",receiverId);
-            return "message.html";
+            model.addAttribute("user",user);
+            System.out.println("Userid : "+userId+", user : "+user);
+            model.addAttribute("userId",userId);
+            return "chat_box.html";
         }else{
             model.addAttribute("message","not verified");
             return "message_menu.html";
@@ -55,9 +56,8 @@ public class MessageController {
 
     @ResponseBody
     @PostMapping("/message/send")
-    public MessageDetail sendMessage(@RequestBody MessageDTO messageDTO, Model model){
+    public MessageDetail sendMessage(@RequestBody MessageDTO messageDTO){
         return messageProcessor.process(messageDTO.getMessage(),userSession.getUserId(),messageDTO.getReceiverId());
-        //model.addAttribute("sent_message",messageDetail);
     }
 
     @ResponseBody

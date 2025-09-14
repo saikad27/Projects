@@ -17,6 +17,6 @@ public class UserVerificationService {
     }
 
     public Long verifyUser(String user){
-           return userRepository.findByUsername(user).orElseThrow(()-> new UserNotFoundException("User not found with name : "+user)).getUser_id();
+           return userRepository.findByUsername(user).orElseThrow(()-> new UserNotFoundException("User not found with name : "+user)).getUserId();
     }
 }
