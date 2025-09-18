@@ -31,22 +31,25 @@ public class MessageController {
     }
 
     @PostMapping("/user/verify")
-    public String verify(@RequestParam String user, Model model){
+    public String verify(@RequestParam String chatUserName, Model model){
 
-        Long userId = null;
+        Long chatUserId = null;
         boolean verificationResult;
         try {
-            userId = userVerifier.verifyUser(user);
+            chatUserId = userVerifier.verifyUser(chatUserName);
             verificationResult = true;
         }catch(UserNotFoundException e){
             e.printStackTrace();
             verificationResult = false;
         }
         if(verificationResult){
-
-            model.addAttribute("user",user);
-            System.out.println("Userid : "+userId+", user : "+user);
-            model.addAttribute("userId",userId);
+            List<MessageDetail> messageList = messageProcessor.retrieveFirstNMessages(userSession.getUserId(),chatUserId);
+            model.addAttribute("chatUserName",chatUserName);
+            model.addAttribute("chatUserId",chatUserId);
+            model.addAttribute("messageList",messageList);
+            for(MessageDetail message : messageList){
+                System.out.println(message);
+            }
             return "chat_box.html";
         }else{
             model.addAttribute("message","not verified");
@@ -56,8 +59,10 @@ public class MessageController {
 
     @ResponseBody
     @PostMapping("/message/send")
-    public MessageDetail sendMessage(@RequestBody MessageDTO messageDTO){
-        return messageProcessor.process(messageDTO.getMessage(),userSession.getUserId(),messageDTO.getReceiverId());
+    public MessageDTO sendMessage(@RequestBody MessageDTO messageDTO){
+        System.out.println(messageDTO);
+        MessageDetail messageDetail = messageProcessor.process(messageDTO.getMessage(),userSession.getUserId(),messageDTO.getReceiverId());
+        return messageDTO;
     }
 
     @ResponseBody

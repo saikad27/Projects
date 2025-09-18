@@ -2,6 +2,7 @@ package com.example.mychat.dto;
 
 public class MessageDTO {
     private Long receiverId;
+
     private String message;
 
     public String getMessage() {
@@ -20,5 +21,11 @@ public class MessageDTO {
         this.receiverId = receiverId;
     }
 
-
+    @Override
+    public String toString() {
+        return "MessageDTO{" +
+                "receiverId=" + receiverId +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }
