@@ -15,9 +15,12 @@ public class LoginProcessor {
     }
     public boolean processLogin(LoginCredential loginCred, UserSession userSession) {
         UserDetail userDetail = userRepository.findByUsername(loginCred.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
-        userSession.setUserId(userDetail.getUserId());
-        userSession.setUsername(userDetail.getUsername());
-        userSession.setEmail(userDetail.getEmail());
-        return loginCred.getUsername().equals(userDetail.getUsername()) && loginCred.getPassword().equals(userDetail.getPassword());
+        boolean loginResult = loginCred.getUsername().equals(userDetail.getUsername()) && loginCred.getPassword().equals(userDetail.getPassword());
+        if(loginResult) {
+            userSession.setUserId(userDetail.getUserId());
+            userSession.setUserName(userDetail.getUsername());
+            userSession.setEmail(userDetail.getEmail());
+        }
+        return loginResult;
     }
 }

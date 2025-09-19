@@ -7,13 +7,13 @@ document.getElementById("send_button").addEventListener("click",() => {
     const message = messageElement.innerText.trim();
 
     //Storing div element for later appending sent message
-    const sentMessageDiv = document.getElementById("messages");
+    let sentMessageDiv = document.getElementById("sent");
 
     if(!message) return;    //No operation for empty message
 
     //Creating messageDTO for fetch request body
     const messageDTO = {
-        receiverId : sessionStorage.getItem("userId"),
+        receiverId : sessionStorage.getItem("chatUserId"),
         message : message
     };
 
@@ -25,13 +25,14 @@ document.getElementById("send_button").addEventListener("click",() => {
     })
     .then(response => response.json())
     .then(data => {
-
         //Displaying retrieved data on the page
+        console.log(data);
         const sentMessage = data.message;
-        const messageDiv = document.createElement("div");
+        let messageDiv = document.createElement("div");
+        messageDiv.classList.add("sent_message");
         messageDiv.textContent = sentMessage;
         sentMessageDiv.appendChild(messageDiv);
         messageElement.innerText = '';
-
     }).catch(err => console.error("Error sending message:",err));
 });
+

@@ -98,4 +98,19 @@ public class MessageDetail {
     public void setMessage_delivery_status(Boolean message_received_status) {
         this.message_delivery_status = message_received_status;
     }
+
+    @Override
+    public String toString() {
+        return "MessageDetail{" +
+                "messageId=" + messageId +
+                ", message_sent_date=" + message_sent_date +
+                ", message_sent_time=" + message_sent_time +
+                ", sender=" + sender +
+                ", message='" + message + '\'' +
+                ", message_received_date=" + message_received_date +
+                ", message_received_time=" + message_received_time +
+                ", receiver=" + receiver +
+                ", message_delivery_status=" + message_delivery_status +
+                '}';
+    }
 }

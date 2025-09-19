@@ -20,23 +20,25 @@ import java.util.Map;
 public class MessageProcessor {
     private final MessageQueueRepository messageQueue;
     private final MessageRepository messageRepository;
-
+    private final UserRepository userRepository;
     private final Map<Long, DeferredResult<MessageDetail>> requestRegistry;
 
 
-    MessageProcessor(MessageQueueRepository messageQueue, MessageRepository messageRepository, Map<Long,DeferredResult<MessageDetail>> requestRegistry){
+    MessageProcessor(MessageQueueRepository messageQueue, MessageRepository messageRepository, Map<Long,DeferredResult<MessageDetail>> requestRegistry,UserRepository userRepository){
         this.messageQueue = messageQueue;
         this.messageRepository = messageRepository;
         this.requestRegistry = requestRegistry;
+        this.userRepository = userRepository;
 
     }
 
     public MessageDetail process(String message, Long senderId, Long receiverId){
+        System.out.println("Inside message Processor");
         MessageDetail messageDetail = new MessageDetail();
         System.out.println(senderId);
-        messageDetail.setSender(new UserDetail(senderId));
-        System.out.println(senderId);
-        messageDetail.setReceiver(new UserDetail(receiverId));
+        System.out.println(receiverId);
+        messageDetail.setSender(userRepository.getReferenceById(senderId));
+        messageDetail.setReceiver(userRepository.getReferenceById(receiverId));
         messageDetail.setMessage(message);
         messageDetail.setMessage_sent_date(Date.valueOf(LocalDate.now()));
         messageDetail.setMessage_sent_time(Time.valueOf(LocalTime.now()));
@@ -49,6 +51,7 @@ public class MessageProcessor {
             requestRegistry.get(messageDetail.getReceiver().getUserId()).setResult(messageDetail);
             messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUserId());
         }
+        System.out.println("Message processor is working just fine");
         return messageDetail;
     }
 
@@ -56,6 +59,16 @@ public class MessageProcessor {
         List<QueuedMessage> fetchedMessages= messageQueue.findByReceiverId(receiverId);
         messageQueue.deleteByReceiverId(receiverId);
         return fetchedMessages;
+    }
+    public List<MessageDetail> retrieveFirstNMessages(Long client,Long chatUser){
+        messageQueue.updateMessageRetrievalDetails(client);
+        messageRepository.updateMessageRetrievalDetails(client);
+        int deletedMessages = messageQueue.deleteByReceiverId(client);
+        int totalMessagesToRetrieve = 50;
+        while(deletedMessages>totalMessagesToRetrieve){
+            totalMessagesToRetrieve+=10;
+        }
+       return messageRepository.findMessages(client,chatUser,totalMessagesToRetrieve);
     }
 
 }

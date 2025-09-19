@@ -49,8 +49,9 @@ public class LoginController {
             return "redirect:/";
         }
 
-        model.addAttribute("username",username);
-
+        model.addAttribute("userName",userSession.getUserName());
+        model.addAttribute("userId",userSession.getUserId());
+        System.out.println("Username : "+userSession.getUserName()+", UserId : "+userSession.getUserId());
         return "message_menu.html";
     }
     @ResponseBody

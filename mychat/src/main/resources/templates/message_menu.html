@@ -12,15 +12,19 @@
 <body>
     <div class="user_profile" id="user_tag"></div>
     <script th:inline="javascript">
-        const userName = /*[[${username}]]*/;
+        const userName = /*[[${userName}]]*/;
+        const userId = [[${userId}]];
+        console.log("Received username : "+userName);
+        console.log("Received userId : "+userId);
         if(userName!=null){
             sessionStorage.setItem("userName",userName);
+            sessionStorage.setItem("userId",userId);
         }
         document.getElementById("user_tag").innerText = "@"+sessionStorage.getItem("userName");
     </script>
     <div class="search_box">
         <form method="post" action="/user/verify">
-            <input type="text" name="user" placeholder="Search">
+            <input type="text" name="chatUserName" placeholder="Search">
             <button type="submit">Submit</button>
         </form>
     </div>

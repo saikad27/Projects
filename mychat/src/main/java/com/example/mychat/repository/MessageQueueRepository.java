@@ -17,8 +17,11 @@ public interface MessageQueueRepository extends JpaRepository<QueuedMessage,Long
     @Transactional
     @Query("DELETE FROM QueuedMessage qm WHERE qm.receiver.userId=:receiver_id")
     @Modifying
-    public void deleteByReceiverId(@Param("receiver_id") Long receiver_id);
+    public int deleteByReceiverId(@Param("receiver_id") Long receiver_id);
 
-
+    @Modifying
+    @Transactional
+    @Query("UPDATE QueuedMessage qm SET qm.messageReceivedDate=CURRENT_DATE(),qm.messageReceivedTime=CURRENT_TIME(),qm.messageDeliveryStatus=true WHERE qm.receiver.userId=:receiverId")
+    public int updateMessageRetrievalDetails(@Param("receiverId") Long receiverId);
 
 }
