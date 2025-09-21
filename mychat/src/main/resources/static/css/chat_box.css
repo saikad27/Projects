@@ -26,47 +26,41 @@
 
 }
 .messages {
-  position: absolute;    /* defines boundaries */
-  top: 100px;            /* start point */
-  bottom: 50px;          /* end point */
-  left: 20px;
-  right: 20px;
+   position: absolute;    /* fix start & end boundaries */
+    top: 100px;            /* container starts 100px from top */
+    bottom: 50px;          /* ends 50px from bottom */
+    left: 20px;
+    right: 20px;
 
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 
-  border: 1.5px solid;
-  padding: 10px;
-  overflow-y: auto;      /* enable scrolling */
-  background: #fafafa;
+    border: 1.5px solid;
+    padding: 10px;
+    overflow-y: auto;      /* enable scroll when overflowing */
+    background: #fafafa;
 }
 
-/* Sent and received wrappers just stack inside */
-#sent, #received {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
 
 /* Sent messages go right */
 .sent_message {
   align-self: flex-end;
-  border: 2px solid;
-  border-radius: 12px;
-  padding: 8px 12px;
-  max-width: 400px;
-  font-size: 20px;
-  background: rgb(117, 209, 246);
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 8px 12px;
+    max-width: 400px;
+    font-size: 20px;
+    background: rgb(117, 209, 246);
 }
 
 /* Received messages go left */
 .received_message {
   align-self: flex-start;
-  border: 2px solid;
-  border-radius: 12px;
-  padding: 8px 12px;
-  max-width: 400px;
-  font-size: 20px;
-  background: pink;
+    border: 2px solid;
+    border-radius: 12px;
+    padding: 8px 12px;
+    max-width: 400px;
+    font-size: 20px;
+    background: pink;
 }

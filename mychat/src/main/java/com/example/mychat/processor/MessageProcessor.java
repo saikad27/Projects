@@ -1,8 +1,8 @@
 package com.example.mychat.processor;
 
+import com.example.mychat.dto.MessageDTO;
 import com.example.mychat.model.MessageDetail;
 import com.example.mychat.model.QueuedMessage;
-import com.example.mychat.model.UserDetail;
 import com.example.mychat.repository.MessageQueueRepository;
 import com.example.mychat.repository.MessageRepository;
 import com.example.mychat.repository.UserRepository;
@@ -21,10 +21,10 @@ public class MessageProcessor {
     private final MessageQueueRepository messageQueue;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
-    private final Map<Long, DeferredResult<MessageDetail>> requestRegistry;
+    private final Map<Long, DeferredResult<MessageDTO>> requestRegistry;
 
 
-    MessageProcessor(MessageQueueRepository messageQueue, MessageRepository messageRepository, Map<Long,DeferredResult<MessageDetail>> requestRegistry,UserRepository userRepository){
+    MessageProcessor(MessageQueueRepository messageQueue, MessageRepository messageRepository, Map<Long,DeferredResult<MessageDTO>> requestRegistry,UserRepository userRepository){
         this.messageQueue = messageQueue;
         this.messageRepository = messageRepository;
         this.requestRegistry = requestRegistry;
@@ -32,14 +32,12 @@ public class MessageProcessor {
 
     }
 
-    public MessageDetail process(String message, Long senderId, Long receiverId){
-        System.out.println("Inside message Processor");
+    public MessageDTO process(MessageDTO messageDTO){
+
         MessageDetail messageDetail = new MessageDetail();
-        System.out.println(senderId);
-        System.out.println(receiverId);
-        messageDetail.setSender(userRepository.getReferenceById(senderId));
-        messageDetail.setReceiver(userRepository.getReferenceById(receiverId));
-        messageDetail.setMessage(message);
+        messageDetail.setSender(userRepository.getReferenceById(messageDTO.getSenderId()));
+        messageDetail.setReceiver(userRepository.getReferenceById(messageDTO.getReceiverId()));
+        messageDetail.setMessage(messageDTO.getMessage());
         messageDetail.setMessage_sent_date(Date.valueOf(LocalDate.now()));
         messageDetail.setMessage_sent_time(Time.valueOf(LocalTime.now()));
         messageDetail.setMessage_delivery_status(false);
@@ -47,12 +45,15 @@ public class MessageProcessor {
         QueuedMessage queuedMessage = new QueuedMessage(messageDetail);
         System.out.println(queuedMessage);
         messageQueue.save(queuedMessage);
-        if(requestRegistry.containsKey(messageDetail.getReceiver().getUserId())){
-            requestRegistry.get(messageDetail.getReceiver().getUserId()).setResult(messageDetail);
+        //MessageDTO messageDTO = new MessageDTO(messageDetail);
+        System.out.println("Online user registry contains : "+requestRegistry.keySet());
+        System.out.println(messageDetail.getReceiver().getUsername()+" is online : "+requestRegistry.containsKey(messageDTO.getReceiverId()));
+        if(requestRegistry.containsKey(messageDTO.getReceiverId())){
+            //requestRegistry.get(messageDetail.getReceiver().getUserId()).setResult(messageDTO);
+            requestRegistry.remove(messageDTO.getReceiverId()).setResult(messageDTO);
             messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUserId());
         }
-        System.out.println("Message processor is working just fine");
-        return messageDetail;
+        return messageDTO;
     }
 
     public List<QueuedMessage> fetchAllMessages(Long receiverId){
@@ -60,7 +61,8 @@ public class MessageProcessor {
         messageQueue.deleteByReceiverId(receiverId);
         return fetchedMessages;
     }
-    public List<MessageDetail> retrieveFirstNMessages(Long client,Long chatUser){
+
+    public List<MessageDTO> retrieveFirstNMessages(Long client,Long chatUser){
         messageQueue.updateMessageRetrievalDetails(client);
         messageRepository.updateMessageRetrievalDetails(client);
         int deletedMessages = messageQueue.deleteByReceiverId(client);
