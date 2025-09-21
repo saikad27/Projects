@@ -1,6 +1,7 @@
 package com.example.mychat.repository;
 
 
+import com.example.mychat.dto.MessageDTO;
 import com.example.mychat.model.MessageDetail;
 import com.example.mychat.model.UserDetail;
 
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class MessageRepositoryImpl implements MessageRepoCustom{
 
-    public List<MessageDetail> findMessages(Long clientId, Long chatUserId, int rows){
-        List<MessageDetail> messageList = new ArrayList<>();
+    public List<MessageDTO> findMessages(Long clientId, Long chatUserId, int rows){
+        List<MessageDTO> messageList = new ArrayList<>();
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/mychatdb", "root", "Saikad@1234");
             String query = "SELECT * FROM (SELECT * FROM message_detail md WHERE (sender_id=? AND receiver_id=?) OR (sender_id=? AND receiver_id=?) ORDER BY message_id DESC LIMIT ?) result_set ORDER BY message_id ASC";
@@ -34,7 +35,7 @@ public class MessageRepositoryImpl implements MessageRepoCustom{
                 md.setReceiver(new UserDetail(rs.getLong("receiver_id")));
                 md.setSender(new UserDetail(rs.getLong("sender_id")));
                 md.setMessage_delivery_status(rs.getBoolean("message_delivery_status"));
-                messageList.add(md);
+                messageList.add(new MessageDTO(md));
             }
             rs.close();
             ps.close();

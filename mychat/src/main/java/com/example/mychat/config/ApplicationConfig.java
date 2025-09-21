@@ -1,19 +1,18 @@
 package com.example.mychat.config;
 
+import com.example.mychat.dto.MessageDTO;
 import com.example.mychat.model.MessageDetail;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.request.async.DeferredResult;
-
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Configuration
 public class ApplicationConfig {
 
     @Bean
-    public Map<Long, DeferredResult<MessageDetail>> request_registry(){
-        return new HashMap<>();
+    public Map<Long, DeferredResult<MessageDTO>> request_registry(){
+        return new ConcurrentHashMap<Long,DeferredResult<MessageDTO>>();
     }
 }

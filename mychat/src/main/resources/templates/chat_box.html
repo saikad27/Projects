@@ -15,12 +15,10 @@
         </div>
 
         <div class="messages">
-            <div id="sent">
+                <!--
                 <div class="sent_message"></div>
-            </div>
-            <div id="received">
                 <div class="received_message"></div>
-            </div>
+                -->
         </div>
         <div class="message_input">
             <div id="input_message_label">Enter message : </div><div contenteditable="true" id="input_message"></div>
@@ -38,21 +36,20 @@
         document.getElementById("chatNametag").innerText = chatUserName;
 
         let messageList = [[${messageList}]];
-        let sentMessageDiv = document.getElementById("sent");
-        let receivedMessageDiv = document.getElementById("received");
-
+       // let sentMessageDiv = document.getElementById("sent");
+       //let receivedMessageDiv = document.getElementById("received");
+       let messageClassDiv = document.getElementsByClassName("messages");
+        console.log(messageClassDiv);
         messageList.forEach(message => {
             console.log(message);
             let messageDiv = document.createElement("div");
-            if(message.sender.userId==sessionStorage.getItem("userId")){
+            if(message.senderId==sessionStorage.getItem("userId")){
                 messageDiv.classList.add("sent_message");
-                messageDiv.textContent = message.message;
-                sentMessageDiv.appendChild(messageDiv);
             }else{
                 messageDiv.classList.add("received_message");
-                messageDiv.textContent = message.message;
-                receivedMessageDiv.appendChild(messageDiv);
             }
+            messageDiv.textContent = message.message;
+            messageClassDiv[0].appendChild(messageDiv);
 
         });
     </script>

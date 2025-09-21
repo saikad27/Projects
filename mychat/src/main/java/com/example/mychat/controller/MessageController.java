@@ -22,8 +22,8 @@ public class MessageController {
     private final UserVerificationService userVerifier;
     private final MessageProcessor messageProcessor;
     private final UserSession userSession;
-    private final Map<Long,DeferredResult<MessageDetail>> requestRegistry;
-    public MessageController(UserVerificationService userVerifier,MessageProcessor messageProcessor,UserSession userSession,Map<Long,DeferredResult<MessageDetail>> requestRegistry) {
+    private final Map<Long,DeferredResult<MessageDTO>> requestRegistry;
+    public MessageController(UserVerificationService userVerifier,MessageProcessor messageProcessor,UserSession userSession,Map<Long,DeferredResult<MessageDTO>> requestRegistry) {
         this.userVerifier = userVerifier;
         this.messageProcessor = messageProcessor;
         this.userSession = userSession;
@@ -43,11 +43,11 @@ public class MessageController {
             verificationResult = false;
         }
         if(verificationResult){
-            List<MessageDetail> messageList = messageProcessor.retrieveFirstNMessages(userSession.getUserId(),chatUserId);
+            List<MessageDTO> messageList = messageProcessor.retrieveFirstNMessages(userSession.getUserId(),chatUserId);
             model.addAttribute("chatUserName",chatUserName);
             model.addAttribute("chatUserId",chatUserId);
             model.addAttribute("messageList",messageList);
-            for(MessageDetail message : messageList){
+            for(MessageDTO message : messageList){
                 System.out.println(message);
             }
             return "chat_box.html";
@@ -59,18 +59,22 @@ public class MessageController {
 
     @ResponseBody
     @PostMapping("/message/send")
-    public MessageDTO sendMessage(@RequestBody MessageDTO messageDTO){
-        System.out.println(messageDTO);
-        MessageDetail messageDetail = messageProcessor.process(messageDTO.getMessage(),userSession.getUserId(),messageDTO.getReceiverId());
-        return messageDTO;
+    public MessageDTO sendMessage(@RequestBody MessageDTO messageDTOSent){
+        System.out.println(messageDTOSent);
+        return messageProcessor.process(messageDTOSent);
     }
 
     @ResponseBody
     @PostMapping("/message/fetch")
-    public DeferredResult<MessageDetail> fetchMessage(){
-        DeferredResult<MessageDetail> dr = new DeferredResult<>(30000L);
+    public DeferredResult<MessageDTO> fetchMessage(){
+        Long userId = userSession.getUserId();
+        DeferredResult<MessageDTO> dr = new DeferredResult<>(30000L);
         requestRegistry.put(userSession.getUserId(),dr);
-        dr.onCompletion(() -> requestRegistry.remove(userSession.getUserId()));
+        System.out.println("Online user registry contains : "+requestRegistry.keySet());
+
+        //messageProcessor.fetchMessage(dr);
+        dr.onCompletion(() -> requestRegistry.remove(userId));
+        dr.onTimeout(() -> requestRegistry.remove(userId));
         return dr;
     }
 
