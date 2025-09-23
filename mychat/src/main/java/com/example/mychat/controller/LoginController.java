@@ -22,12 +22,12 @@ public class LoginController {
     private final LoginProcessor loginProcessor;
     private final LoginCredential loginCredential;
     private final UserSession userSession;
-    private final MessageProcessor messageProcessor;
-    LoginController(LoginProcessor loginProcessor,LoginCredential loginCredential,UserSession userSession,MessageProcessor messageProcessor){
+
+    LoginController(LoginProcessor loginProcessor,LoginCredential loginCredential,UserSession userSession){
         this.loginProcessor = loginProcessor;
         this.loginCredential = loginCredential;
         this.userSession = userSession;
-        this.messageProcessor = messageProcessor;
+
     }
     @GetMapping("/")
     public String loginGet(){
@@ -35,7 +35,7 @@ public class LoginController {
     }
 
     @PostMapping("/")
-    public String loginPost(@RequestParam String username,@RequestParam String password,Model model){
+    public String loginPost(@RequestParam String username,@RequestParam String password){
         boolean loginResult;
         loginCredential.setUsername(username);
         loginCredential.setPassword(password);
@@ -49,14 +49,9 @@ public class LoginController {
             return "redirect:/";
         }
 
-        model.addAttribute("userName",userSession.getUserName());
-        model.addAttribute("userId",userSession.getUserId());
+
         System.out.println("Username : "+userSession.getUserName()+", UserId : "+userSession.getUserId());
-        return "message_menu.html";
+        return "redirect:/message_menu";
     }
-    @ResponseBody
-    @PostMapping("/fetchAllMessages")
-    public List<QueuedMessage> fetchAllMessages(){
-        return messageProcessor.fetchAllMessages(userSession.getUserId());
-    }
+
 }

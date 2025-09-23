@@ -7,9 +7,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface MessageRepository extends JpaRepository<MessageDetail,Long>,MessageRepoCustom {
     @Modifying
     @Transactional
-    @Query("UPDATE QueuedMessage qm SET qm.messageReceivedDate=CURRENT_DATE(),qm.messageReceivedTime=CURRENT_TIME(),qm.messageDeliveryStatus=true WHERE qm.receiver.userId=:receiverId AND qm.messageDeliveryStatus=false")
-    public int updateMessageRetrievalDetails(@Param("receiverId") Long receiverId);
+    @Query("UPDATE MessageDetail md SET md.messageReceivedDate=CURRENT_DATE,md.messageReceivedTime=CURRENT_TIME,md.messageDeliveryStatus=true WHERE md.receiver.userId=:receiverId AND md.messageDeliveryStatus=false")
+    public void updateMessageRetrievalDetails(@Param("receiverId") Long receiverId);
+
+    @Query(value="SELECT receiver_id AS user_id FROM message_db WHERE sender_id = :userId UNION SELECT sender_id AS user_id FROM message_db WHERE receiver_id= :userId",nativeQuery=true)
+    public List<Long> getChatUsers(@Param("userId")Long userId);
 }

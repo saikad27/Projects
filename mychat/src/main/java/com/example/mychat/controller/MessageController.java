@@ -9,10 +9,7 @@ import com.example.mychat.processor.MessageProcessor;
 import com.example.mychat.service.UserVerificationService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +50,7 @@ public class MessageController {
             return "chat_box.html";
         }else{
             model.addAttribute("message","not verified");
-            return "message_menu.html";
+            return "redirect:/message_menu";
         }
     }
 
@@ -71,17 +68,18 @@ public class MessageController {
         DeferredResult<MessageDTO> dr = new DeferredResult<>(30000L);
         requestRegistry.put(userSession.getUserId(),dr);
         System.out.println("Online user registry contains : "+requestRegistry.keySet());
-
         //messageProcessor.fetchMessage(dr);
         dr.onCompletion(() -> requestRegistry.remove(userId));
         dr.onTimeout(() -> requestRegistry.remove(userId));
         return dr;
     }
-
+    /*
     @ResponseBody
     @PostMapping("/message/fetchAll")
     public List<QueuedMessage> fetchAllMessages(Long receiverId){
         return messageProcessor.fetchAllMessages(userSession.getUserId());
-    }
+    }*/
+
+
 
 }

@@ -14,8 +14,6 @@
     <script th:inline="javascript">
         const userName = /*[[${userName}]]*/;
         const userId = [[${userId}]];
-        console.log("Received username : "+userName);
-        console.log("Received userId : "+userId);
         if(userName!=null){
             sessionStorage.setItem("userName",userName);
             sessionStorage.setItem("userId",userId);
@@ -29,7 +27,7 @@
         </form>
     </div>
     <div th:text="${message}"></div>
-    <div id="chat_container"></div>
+    <div class="chat_container"></div>
     <script th:src="@{/js/message_menu.js}"></script>
 </body>
 </html>

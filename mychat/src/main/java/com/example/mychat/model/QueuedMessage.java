@@ -6,16 +6,17 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
-@Table(name="message_queue")
+@Table(name="new_message_queue")
 public class QueuedMessage {
     public QueuedMessage(MessageDetail messageDetail){
         messageId = messageDetail.getMessageId();
-        messageSentDate = messageDetail.getMessage_sent_date();
-        messageSentTime = messageDetail.getMessage_sent_time();
+        messageSentDate = messageDetail.getMessageSentDate();
+        messageSentTime = messageDetail.getMessageSentTime();
         message = messageDetail.getMessage();
         sender = messageDetail.getSender();
         receiver = messageDetail.getReceiver();
-        messageDeliveryStatus = messageDetail.getMessage_delivery_status();
+        messageDeliveryStatus = messageDetail.getMessageDeliveryStatus();
+        isDeleted = messageDetail.getDeleted();
     }
 
     public QueuedMessage() {
@@ -36,20 +37,24 @@ public class QueuedMessage {
     @ManyToOne
     @JoinColumn(name="receiver_id" , referencedColumnName="userId")
     private UserDetail receiver;
+    @Column(name="message_delivered")
     private Boolean messageDeliveryStatus;
+    @Column(name="deleted")
+    private Boolean isDeleted;
 
     @Override
     public String toString() {
         return "QueuedMessage{" +
                 "messageId=" + messageId +
-                ", message_sent_date=" + messageSentDate +
-                ", message_sent_time=" + messageSentTime +
+                ", messageSentDate=" + messageSentDate +
+                ", messageSentTime=" + messageSentTime +
                 ", sender=" + sender +
                 ", message='" + message + '\'' +
-                ", message_received_date=" + messageReceivedDate +
-                ", message_received_time=" + messageReceivedTime +
+                ", messageReceivedDate=" + messageReceivedDate +
+                ", messageReceivedTime=" + messageReceivedTime +
                 ", receiver=" + receiver +
-                ", message_delivery_status=" + messageDeliveryStatus +
+                ", messageDeliveryStatus=" + messageDeliveryStatus +
+                ", isDeleted=" + isDeleted +
                 '}';
     }
 
@@ -61,19 +66,19 @@ public class QueuedMessage {
         this.messageId = messageId;
     }
 
-    public Date getMessage_sent_date() {
+    public Date getMessageSentDate() {
         return messageSentDate;
     }
 
-    public void setMessage_sent_date(Date messageSentDate) {
+    public void setMessageSentDate(Date messageSentDate) {
         this.messageSentDate = messageSentDate;
     }
 
-    public Time getMessage_sent_time() {
+    public Time getMessageSentTime() {
         return messageSentTime;
     }
 
-    public void setMessage_sent_time(Time messageSentTime) {
+    public void setMessageSentTime(Time messageSentTime) {
         this.messageSentTime = messageSentTime;
     }
 
@@ -93,19 +98,19 @@ public class QueuedMessage {
         this.message = message;
     }
 
-    public Date getMessage_received_date() {
+    public Date getMessageReceivedDate() {
         return messageReceivedDate;
     }
 
-    public void setMessage_received_date(Date message_received_date) {
-        this.messageReceivedDate = message_received_date;
+    public void setMessageReceivedDate(Date messageReceivedDate) {
+        this.messageReceivedDate = messageReceivedDate;
     }
 
-    public Time getMessage_received_time() {
+    public Time getMessageReceivedTime() {
         return messageReceivedTime;
     }
 
-    public void setMessage_received_time(Time messageReceivedTime) {
+    public void setMessageReceivedTime(Time messageReceivedTime) {
         this.messageReceivedTime = messageReceivedTime;
     }
 
@@ -117,11 +122,19 @@ public class QueuedMessage {
         this.receiver = receiver;
     }
 
-    public Boolean getMessage_delivery_status() {
+    public Boolean getMessageDeliveryStatus() {
         return messageDeliveryStatus;
     }
 
-    public void setMessage_delivery_status(Boolean messageDeliveryStatus) {
+    public void setMessageDeliveryStatus(Boolean messageDeliveryStatus) {
         this.messageDeliveryStatus = messageDeliveryStatus;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }
