@@ -1,5 +1,6 @@
 .search_box{
     text-align:center;
+    padding-bottom:20px;
 }
 div{
     background:black;
@@ -17,9 +18,30 @@ html,body{
     font-size:30px;
     font-family: sans-serif ;
 }
-.chat_box{
+.chat_div{
     border:2px solid white;
     height:40px;
     font-size:25px;
+    display:flex;
+   //flex-direction:row;
+   justify-content:space-between;
+   width:500px;
 
+}
+.chat_container{
+       padding-top:20px;
+       border:2px solid white;
+       display:flex;
+       flex-direction:column;
+      // justify-content:center;
+       align-items:center;
+       height:100vh;
+       gap:10px;
+
+}
+.message_count{
+    padding-right:20px;
+}
+.chat_user_name{
+    padding-left:20px;
 }

@@ -15,4 +15,9 @@ public class ApplicationConfig {
     public Map<Long, DeferredResult<MessageDTO>> request_registry(){
         return new ConcurrentHashMap<Long,DeferredResult<MessageDTO>>();
     }
+
+    @Bean
+    public Map<Long,Long> onlineUserRegistry(){
+        return new ConcurrentHashMap<Long,Long>();
+    }
 }

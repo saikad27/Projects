@@ -7,25 +7,47 @@ import java.sql.Date;
 import java.sql.Time;
 
 @Entity
+@Table(name="message_db")
 public class MessageDetail {
 
     @Id
     @GeneratedValue(strategy= GenerationType.SEQUENCE)
     private Long messageId;
-    private Date message_sent_date;
-    private Time message_sent_time;
+    private Date messageSentDate;
+    private Time messageSentTime;
 
     @ManyToOne
     @JoinColumn(name="sender_id" , referencedColumnName="userId")
     private UserDetail sender;
     private String message;
-    private Date message_received_date;
-    private Time message_received_time;
+    private Date messageReceivedDate;
+    private Time messageReceivedTime;
 
     @ManyToOne
     @JoinColumn(name="receiver_id" , referencedColumnName="userId")
     private UserDetail receiver;
-    private Boolean message_delivery_status;
+
+    @Column(name="message_delivered")
+    private Boolean messageDeliveryStatus;
+
+    @Column(name="deleted")
+    private Boolean isDeleted;
+
+    @Override
+    public String toString() {
+        return "MessageDetail{" +
+                "messageId=" + messageId +
+                ", messageSentDate=" + messageSentDate +
+                ", messageSentTime=" + messageSentTime +
+                ", sender=" + sender +
+                ", message='" + message + '\'' +
+                ", messageReceivedDate=" + messageReceivedDate +
+                ", messageReceivedTime=" + messageReceivedTime +
+                ", receiver=" + receiver +
+                ", messageDeliveryStatus=" + messageDeliveryStatus +
+                ", isDeleted=" + isDeleted +
+                '}';
+    }
 
     public Long getMessageId() {
         return messageId;
@@ -35,20 +57,20 @@ public class MessageDetail {
         this.messageId = messageId;
     }
 
-    public Date getMessage_sent_date() {
-        return message_sent_date;
+    public Date getMessageSentDate() {
+        return messageSentDate;
     }
 
-    public void setMessage_sent_date(Date message_sent_date) {
-        this.message_sent_date = message_sent_date;
+    public void setMessageSentDate(Date messageSentDate) {
+        this.messageSentDate = messageSentDate;
     }
 
-    public Time getMessage_sent_time() {
-        return message_sent_time;
+    public Time getMessageSentTime() {
+        return messageSentTime;
     }
 
-    public void setMessage_sent_time(Time message_sent_time) {
-        this.message_sent_time = message_sent_time;
+    public void setMessageSentTime(Time messageSentTime) {
+        this.messageSentTime = messageSentTime;
     }
 
     public UserDetail getSender() {
@@ -67,20 +89,20 @@ public class MessageDetail {
         this.message = message;
     }
 
-    public Date getMessage_received_date() {
-        return message_received_date;
+    public Date getMessageReceivedDate() {
+        return messageReceivedDate;
     }
 
-    public void setMessage_received_date(Date message_received_date) {
-        this.message_received_date = message_received_date;
+    public void setMessageReceivedDate(Date messageReceivedDate) {
+        this.messageReceivedDate = messageReceivedDate;
     }
 
-    public Time getMessage_received_time() {
-        return message_received_time;
+    public Time getMessageReceivedTime() {
+        return messageReceivedTime;
     }
 
-    public void setMessage_received_time(Time message_received_time) {
-        this.message_received_time = message_received_time;
+    public void setMessageReceivedTime(Time messageReceivedTime) {
+        this.messageReceivedTime = messageReceivedTime;
     }
 
     public UserDetail getReceiver() {
@@ -91,26 +113,19 @@ public class MessageDetail {
         this.receiver = receiver;
     }
 
-    public Boolean getMessage_delivery_status() {
-        return message_delivery_status;
+    public Boolean getMessageDeliveryStatus() {
+        return messageDeliveryStatus;
     }
 
-    public void setMessage_delivery_status(Boolean message_received_status) {
-        this.message_delivery_status = message_received_status;
+    public void setMessageDeliveryStatus(Boolean messageDeliveryStatus) {
+        this.messageDeliveryStatus = messageDeliveryStatus;
     }
 
-    @Override
-    public String toString() {
-        return "MessageDetail{" +
-                "messageId=" + messageId +
-                ", message_sent_date=" + message_sent_date +
-                ", message_sent_time=" + message_sent_time +
-                ", sender=" + sender +
-                ", message='" + message + '\'' +
-                ", message_received_date=" + message_received_date +
-                ", message_received_time=" + message_received_time +
-                ", receiver=" + receiver +
-                ", message_delivery_status=" + message_delivery_status +
-                '}';
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
     }
 }

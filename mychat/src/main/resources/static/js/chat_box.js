@@ -1,3 +1,40 @@
+let messageClassDiv = document.getElementsByClassName("messages");
+
+function fetchNMessages(){
+    fetch("/message/fetch_messages?chatUserId="+sessionStorage.getItem("chatUserId"),{
+        method:"POST"
+      //  headers:{"content-type" : "application/json"},
+       // body:JSON.stringify({chatUserId:sessionStorage.getItem("chatUserId")})
+    })
+    .then(response => response.json())
+    .then(messageList => {
+        console.log(messageList);
+        messageList.forEach(message => {
+        console.log(message);
+        let messageDiv = document.createElement("div");
+        if(message.senderId==sessionStorage.getItem("userId")){
+               messageDiv.className = "sent_message";
+        }else{
+               messageDiv.className = "received_message";
+        }
+               messageDiv.textContent = message.message;
+               messageClassDiv[0].appendChild(messageDiv);
+        });
+    }).catch(err => console.log("Error fetching messages : "+err));
+}
+fetchNMessages();
+
+document.getElementById("exit_chat_button").addEventListener("click",() => {
+    sessionStorage.setItem("chatUserId",null);
+    sessionStorage.setItem("chatUserName",null);
+    console.log("removing user form active chat");
+    fetch("/remove_user",{method:"POST"})
+    .then(response =>{
+        console.log("User removed successfully");
+        window.location.href = "/message_menu";
+    }).catch(err => console.log("Error occured while removing the user from active chat registry"));
+});
+
 
 //Defining event handler for button click
 document.getElementById("send_button").addEventListener("click",() => {
@@ -52,7 +89,6 @@ headers:{"content-type" : "application/json"}
 })
 .then(data => {
         if(data==null){
-            console.log("No message received");
         }else{
        const receivedMessage = data.message;
        let newMessageDiv = document.createElement("div");

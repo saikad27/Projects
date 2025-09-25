@@ -38,39 +38,40 @@ public class MessageProcessor {
         messageDetail.setSender(userRepository.getReferenceById(messageDTO.getSenderId()));
         messageDetail.setReceiver(userRepository.getReferenceById(messageDTO.getReceiverId()));
         messageDetail.setMessage(messageDTO.getMessage());
-        messageDetail.setMessage_sent_date(Date.valueOf(LocalDate.now()));
-        messageDetail.setMessage_sent_time(Time.valueOf(LocalTime.now()));
-        messageDetail.setMessage_delivery_status(false);
+        messageDetail.setMessageSentDate(Date.valueOf(LocalDate.now()));
+        messageDetail.setMessageSentTime(Time.valueOf(LocalTime.now()));
+        messageDetail.setMessageDeliveryStatus(false);
+        messageDetail.setDeleted(false);
         messageRepository.save(messageDetail);
         QueuedMessage queuedMessage = new QueuedMessage(messageDetail);
-        System.out.println(queuedMessage);
+        System.out.println("Sent message is processed : "+queuedMessage);
         messageQueue.save(queuedMessage);
-        //MessageDTO messageDTO = new MessageDTO(messageDetail);
         System.out.println("Online user registry contains : "+requestRegistry.keySet());
         System.out.println(messageDetail.getReceiver().getUsername()+" is online : "+requestRegistry.containsKey(messageDTO.getReceiverId()));
         if(requestRegistry.containsKey(messageDTO.getReceiverId())){
-            //requestRegistry.get(messageDetail.getReceiver().getUserId()).setResult(messageDTO);
+            System.out.println("Receiver is about to retrieve the message");
+            messageRepository.updateMessageRetrievalDetails(messageDTO.getReceiverId());
             requestRegistry.remove(messageDTO.getReceiverId()).setResult(messageDTO);
-            messageQueue.deleteByReceiverId(messageDetail.getReceiver().getUserId());
+            messageQueue.deleteChatMessages(messageDTO.getReceiverId(),messageDTO.getSenderId());
         }
         return messageDTO;
     }
 
-    public List<QueuedMessage> fetchAllMessages(Long receiverId){
+    /*public List<QueuedMessage> fetchAllMessages(Long senderId){
         List<QueuedMessage> fetchedMessages= messageQueue.findByReceiverId(receiverId);
         messageQueue.deleteByReceiverId(receiverId);
         return fetchedMessages;
-    }
+    }*/
 
-    public List<MessageDTO> retrieveFirstNMessages(Long client,Long chatUser){
-        messageQueue.updateMessageRetrievalDetails(client);
-        messageRepository.updateMessageRetrievalDetails(client);
-        int deletedMessages = messageQueue.deleteByReceiverId(client);
+    public List<MessageDTO> retrieveFirstNMessages(Long clientId,Long chatUserId){
+
+        messageRepository.updateMessageRetrievalDetails(clientId);
+        int deletedMessages = messageQueue.deleteChatMessages(clientId,chatUserId);
         int totalMessagesToRetrieve = 50;
         while(deletedMessages>totalMessagesToRetrieve){
             totalMessagesToRetrieve+=10;
         }
-       return messageRepository.findMessages(client,chatUser,totalMessagesToRetrieve);
+       return messageRepository.findMessages(clientId,chatUserId,totalMessagesToRetrieve);
     }
 
 }
