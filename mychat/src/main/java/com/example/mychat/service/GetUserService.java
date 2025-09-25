@@ -1,6 +1,7 @@
 package com.example.mychat.service;
 
 import com.example.mychat.dto.ChatUserDTO;
+import com.example.mychat.dto.MessageDTO;
 import com.example.mychat.repository.MessageQueueRepository;
 import com.example.mychat.repository.MessageRepository;
 import com.example.mychat.repository.UserRepository;
@@ -34,4 +35,5 @@ public class GetUserService {
         }
         return userList;
     }
+
 }

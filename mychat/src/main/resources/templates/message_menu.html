@@ -21,13 +21,15 @@
         document.getElementById("user_tag").innerText = "@"+sessionStorage.getItem("userName");
     </script>
     <div class="search_box">
-        <form method="post" action="/user/verify">
-            <input type="text" name="chatUserName" placeholder="Search">
-            <button type="submit">Submit</button>
-        </form>
+            <div contenteditable="true" id="entered_user"></div>
+            <button id="user_verification_button">Verify & Add</button>
     </div>
-    <div th:text="${message}"></div>
-    <div class="chat_container"></div>
+    <div id="user_verification_message"></div>
+    <div class="chat_container">
+        <!--
+        <div class="chat_div"> </div>
+        -->
+    </div>
     <script th:src="@{/js/message_menu.js}"></script>
 </body>
 </html>

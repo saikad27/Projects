@@ -1,14 +1,10 @@
 package com.example.mychat.controller;
 
 import com.example.mychat.dto.MessageDTO;
-import com.example.mychat.exception.UserNotFoundException;
-import com.example.mychat.model.MessageDetail;
-import com.example.mychat.model.QueuedMessage;
 import com.example.mychat.model.UserSession;
 import com.example.mychat.processor.MessageProcessor;
 import com.example.mychat.service.UserVerificationService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import java.util.List;
@@ -27,7 +23,7 @@ public class MessageController {
         this.requestRegistry = requestRegistry;
     }
 
-    @PostMapping("/user/verify")
+    /*@GetMapping("/user/verify")
     public String verify(@RequestParam String chatUserName, Model model){
 
         Long chatUserId = null;
@@ -52,12 +48,12 @@ public class MessageController {
             model.addAttribute("message","not verified");
             return "redirect:/message_menu";
         }
-    }
+    }*/
 
     @ResponseBody
     @PostMapping("/message/send")
     public MessageDTO sendMessage(@RequestBody MessageDTO messageDTOSent){
-        System.out.println(messageDTOSent);
+        System.out.println(userSession.getUserId()+" sent a message to "+messageDTOSent.getReceiverId());
         return messageProcessor.process(messageDTOSent);
     }
 
@@ -73,13 +69,23 @@ public class MessageController {
         dr.onTimeout(() -> requestRegistry.remove(userId));
         return dr;
     }
-    /*
+
+
     @ResponseBody
-    @PostMapping("/message/fetchAll")
-    public List<QueuedMessage> fetchAllMessages(Long receiverId){
-        return messageProcessor.fetchAllMessages(userSession.getUserId());
-    }*/
+    @PostMapping("/message/fetch_messages")
+    public List<MessageDTO> fetchNMessages(@RequestParam Long chatUserId){
+        return messageProcessor.retrieveFirstNMessages(userSession.getUserId(),chatUserId);
+    }
 
+    @GetMapping("/message/chat")
+    public String getChatBox(){
+        return "chat_box";
+    }
 
+    @PostMapping("/remove_user")
+    public void removeUserFromRegistry(){
+        requestRegistry.remove(userSession.getUserId());
+        System.out.println(userSession.getUserName()+" is removed from in chat user registry with id : "+userSession.getUserId());
+    }
 
 }

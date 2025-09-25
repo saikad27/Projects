@@ -1,8 +1,8 @@
 package com.example.mychat.service;
 
+import com.example.mychat.dto.ChatUserDTO;
 import com.example.mychat.exception.UserNotFoundException;
 import com.example.mychat.model.UserDetail;
-import com.example.mychat.model.UserSession;
 import com.example.mychat.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,8 @@ public class UserVerificationService {
         this.userRepository = userRepository;
     }
 
-    public Long verifyUser(String user){
-           return userRepository.findByUsername(user).orElseThrow(()-> new UserNotFoundException("User not found with name : "+user)).getUserId();
+    public ChatUserDTO verifyUser(String user){
+        UserDetail userDetail = userRepository.findByUsername(user).orElseThrow(()-> new UserNotFoundException("User not found with name : "+user));
+        return new ChatUserDTO(userDetail);
     }
 }

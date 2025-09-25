@@ -44,12 +44,12 @@ public class MessageProcessor {
         messageDetail.setDeleted(false);
         messageRepository.save(messageDetail);
         QueuedMessage queuedMessage = new QueuedMessage(messageDetail);
-        System.out.println(queuedMessage);
+        System.out.println("Sent message is processed : "+queuedMessage);
         messageQueue.save(queuedMessage);
         System.out.println("Online user registry contains : "+requestRegistry.keySet());
         System.out.println(messageDetail.getReceiver().getUsername()+" is online : "+requestRegistry.containsKey(messageDTO.getReceiverId()));
         if(requestRegistry.containsKey(messageDTO.getReceiverId())){
-
+            System.out.println("Receiver is about to retrieve the message");
             messageRepository.updateMessageRetrievalDetails(messageDTO.getReceiverId());
             requestRegistry.remove(messageDTO.getReceiverId()).setResult(messageDTO);
             messageQueue.deleteChatMessages(messageDTO.getReceiverId(),messageDTO.getSenderId());
@@ -57,7 +57,7 @@ public class MessageProcessor {
         return messageDTO;
     }
 
-    /*public List<QueuedMessage> fetchAllMessages(Long receiverId){
+    /*public List<QueuedMessage> fetchAllMessages(Long senderId){
         List<QueuedMessage> fetchedMessages= messageQueue.findByReceiverId(receiverId);
         messageQueue.deleteByReceiverId(receiverId);
         return fetchedMessages;
