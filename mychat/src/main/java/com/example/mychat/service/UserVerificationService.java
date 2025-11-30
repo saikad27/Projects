@@ -17,7 +17,9 @@ public class UserVerificationService {
     }
 
     public ChatUserDTO verifyUser(String user){
+        System.out.println("verify user called");
         UserDetail userDetail = userRepository.findByUsername(user).orElseThrow(()-> new UserNotFoundException("User not found with name : "+user));
+        System.out.println(userDetail);
         return new ChatUserDTO(userDetail);
     }
 }

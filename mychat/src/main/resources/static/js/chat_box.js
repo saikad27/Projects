@@ -27,7 +27,7 @@ fetchNMessages();
 document.getElementById("exit_chat_button").addEventListener("click",() => {
     sessionStorage.setItem("chatUserId",null);
     sessionStorage.setItem("chatUserName",null);
-    console.log("removing user form active chat");
+    console.log("removing user from active chat");
     fetch("/remove_user",{method:"POST"})
     .then(response =>{
         console.log("User removed successfully");

@@ -6,6 +6,7 @@ await fetch("/message_menu/fetch_chat_users")
 .then(response => response.json())
 .then(data =>{
     let chatUserList = data;
+    console.log(data);
     chatUserList.sort((a,b)=> b.messageCount - a.messageCount);
     chatUserList.forEach(chatUser =>{
         console.log(chatUser);
@@ -22,21 +23,28 @@ async function doStuff(){
 doStuff();
 
 document.getElementById("user_verification_button").addEventListener("click", event => {
-        const enteredUserDiv = document.getElementById("entered_user");
-        const enteredUserName = enteredUserDiv.innerText.trim();
-        if(!enteredUserName) return;
-        let param = new URLSearchParams({name:enteredUserName});
-        fetch("/verify/user?"+param)
+        //const enteredUserDiv = document.getElementById("entered_user");
+        //const enteredUserName = enteredUserDiv.innerText.trim();
+        let param = document.getElementById("entered_user").value;
+        if(!param) return;
+        //let param = new URLSearchParams({name:enteredUserName});
+        console.log(param);
+        fetch(`/user/verify?user=${param}`)
         .then(response => response.json())
         .then(data => {
-            if(data.chatUserId==null){
+            //System.out.println(data);
+            console.log(data);
+            if(data.data.chatUserId==null){
                 document.getElementById("user_verification_message").textContent = "User not found.";
                 return;
             }else{
                 document.getElementById("user_verification_message").textContent = "Verified";
             }
-            addUserToChatContainer(data);
-        }).catch(err => console.log("Error occured while during user verification"));
+            addUserToChatContainer(data.data);
+            console.log("Calling event listener method");
+            addingEventListeners();
+            console.log("EventListener added")
+        }).catch(err => console.log("Error occurred while user verification"));
 
 });
 
@@ -71,6 +79,7 @@ function addUserToChatContainer(chatUser){
                newChatDiv.appendChild(messageCountDiv);
 
                containerDiv[0].appendChild(newChatDiv);
+
 }
 function addingEventListeners(){
 console.log("inside adding event listener method");

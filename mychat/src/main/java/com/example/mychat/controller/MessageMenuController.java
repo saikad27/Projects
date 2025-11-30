@@ -3,10 +3,12 @@ package com.example.mychat.controller;
 
 import com.example.mychat.dto.ChatUserDTO;
 import com.example.mychat.exception.UserNotFoundException;
+import com.example.mychat.model.UserDetail;
 import com.example.mychat.model.UserSession;
 import com.example.mychat.service.GetUserService;
 import com.example.mychat.service.UserVerificationService;
-import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 @Controller
 public class MessageMenuController {
@@ -46,12 +48,13 @@ public class MessageMenuController {
 
     @ResponseBody
     @GetMapping("/user/verify")
-    public ChatUserDTO verifyUser(@RequestParam String user){
-
+    public ResponseEntity<Map> verifyUser(@RequestParam String user){
+        System.out.println("verify controller called");
         try{
-            return userVerificationService.verifyUser(user);
+            ChatUserDTO ud = userVerificationService.verifyUser(user);
+            return ResponseEntity.ok().body(Map.of("data",ud));
         }catch(UserNotFoundException unfe){
-            return new ChatUserDTO();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error",unfe));
         }
 
     }

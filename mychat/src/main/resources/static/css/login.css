@@ -1,0 +1,96 @@
+/* auth.css */
+
+/* page background */
+body {
+  min-height: 100vh;
+  background: #000;              /* black background like your screenshot */
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  color: #222;
+  position: relative;
+}
+
+/* large faint title at top center */
+.big-title {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 48px;
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, blue, purple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /*color: rgba(255,255,255,0.06); /* faint */*/
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  margin: 0;
+}
+
+/* center the card and push slightly down from top */
+.auth-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100vh;
+  padding-top: 70px;
+  z-index: 1;
+  position: relative;
+}
+
+/* card styling to match screenshot */
+.auth-card {
+  width: 380px;
+  max-width: calc(100% - 48px);
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.45), 0 12px 30px rgba(0,0,0,0.35);
+  border: 4px solid rgba(0,0,0,0.02);
+}
+
+/* title inside card */
+.card-title {
+  text-align: center;
+  margin-bottom: 18px;
+  font-weight: 600;
+  color: #444;
+  font-size: 20px;
+}
+
+/* tweak Bootstrap form-controls to match look */
+.auth-card .form-control {
+  height: 48px;
+  border-radius: 8px;
+  box-shadow: none;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 0 14px;
+}
+
+.auth-card .form-control:focus {
+  box-shadow: none;
+  border-color: #0d6efd; /* bootstrap primary */
+}
+
+/* button tweaks */
+.auth-card .btn-primary {
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  box-shadow: 0 6px 10px rgba(13,110,253,0.12);
+}
+
+/* footer link */
+.form-footer a {
+  color: #0d6efd;
+  font-weight: 500;
+}
+
+/* responsive adjustments */
+@media (max-width: 420px) {
+  .big-title { font-size: 36px; top: 4px; }
+  .auth-wrap { padding-top: 40px; }
+}
